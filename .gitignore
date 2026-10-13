@@ -1,0 +1,26 @@
+
+# Environment variables and API keys
+.env
+.env.*
+
+# Python virtual environment
+.venv/
+venv/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Chat history and private data
+chat_history.json
+
+# Temporary files
+tempCodeRunnerFile.py
+*.log
+
+# VS Code settings (optional)
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db

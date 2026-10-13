@@ -1,0 +1,703 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Teacher | Learn Smarter</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #f5f7fc;
+    --panel: #ffffff;
+    --primary: #6558e8;
+    --primary-dark: #5144d4;
+    --text: #20243a;
+    --muted: #858ba3;
+    --border: #e8eaf2;
+}
+
+body {
+    font-family: Inter, "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+}
+
+.app {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar */
+
+.sidebar {
+    width: 265px;
+    background: #fff;
+    border-right: 1px solid var(--border);
+    padding: 26px 18px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 4px 35px;
+}
+
+.brand-icon {
+    width: 43px;
+    height: 43px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    color: white;
+    font-size: 22px;
+    background: linear-gradient(135deg, #8275ff, #5144d4);
+    box-shadow: 0 5px 15px #6558e833;
+}
+
+.brand h2 {
+    font-size: 18px;
+    letter-spacing: -0.5px;
+}
+
+.brand p {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+.new-chat {
+    width: 100%;
+    border: 0;
+    background: var(--primary);
+    color: white;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.new-chat:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+.side-label {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.3px;
+    margin: 32px 8px 15px;
+}
+
+.feature {
+    display: flex;
+    gap: 12px;
+    padding: 13px 10px;
+    border-radius: 10px;
+    color: #555b74;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.feature.active {
+    background: #f0efff;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.feature span {
+    font-size: 17px;
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+    border-top: 1px solid var(--border);
+    padding-top: 18px;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 8px 4px;
+}
+
+.avatar {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #eae7ff;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.profile h4 {
+    font-size: 13px;
+}
+
+.profile p {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+/* Main chat */
+
+.main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.topbar {
+    height: 76px;
+    flex-shrink: 0;
+    background: #ffffffd9;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 34px;
+}
+
+.topbar h3 {
+    font-size: 16px;
+}
+
+.topbar p {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: #288b64;
+    background: #eaf8f0;
+    padding: 9px 13px;
+    border-radius: 30px;
+}
+
+.dot {
+    height: 7px;
+    width: 7px;
+    background: #31b879;
+    border-radius: 50%;
+}
+
+.chat-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 36px 22px;
+    scroll-behavior: smooth;
+}
+
+.chat-content {
+    max-width: 790px;
+    margin: 0 auto;
+}
+
+.welcome {
+    text-align: center;
+    padding: 45px 0 35px;
+}
+
+.welcome-icon {
+    width: 75px;
+    height: 75px;
+    margin: 0 auto 24px;
+    border-radius: 25px;
+    display: grid;
+    place-items: center;
+    font-size: 34px;
+    background: linear-gradient(135deg, #eae7ff, #f5edff);
+}
+
+.welcome h1 {
+    font-size: clamp(27px, 4vw, 37px);
+    letter-spacing: -1.3px;
+    line-height: 1.3;
+    margin-bottom: 13px;
+}
+
+.welcome h1 span {
+    color: var(--primary);
+}
+
+.welcome > p {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.8;
+    max-width: 440px;
+    margin: auto;
+}
+
+.suggestions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 13px;
+    margin-top: 15px;
+}
+
+.suggestion {
+    text-align: left;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 19px;
+    cursor: pointer;
+    transition: 0.2s;
+    color: var(--text);
+}
+
+.suggestion:hover {
+    border-color: #aaa2ff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px #4540800b;
+}
+
+.suggestion .emoji {
+    font-size: 21px;
+    display: block;
+    margin-bottom: 13px;
+}
+
+.suggestion strong {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 7px;
+}
+
+.suggestion p {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+.message {
+    display: flex;
+    gap: 12px;
+    margin: 24px 0;
+    align-items: flex-start;
+}
+
+.message.user {
+    flex-direction: row-reverse;
+}
+
+.message-avatar {
+    flex-shrink: 0;
+    width: 35px;
+    height: 35px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: #ebe8ff;
+    color: var(--primary);
+    font-size: 17px;
+}
+
+.user .message-avatar {
+    background: #e4f1ff;
+    color: #347ac1;
+}
+
+.bubble {
+    max-width: 82%;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 4px 16px 16px 16px;
+    padding: 14px 17px;
+    font-size: 14px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.user .bubble {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 16px 4px 16px 16px;
+}
+
+.typing {
+    color: var(--muted);
+    font-size: 13px;
+    padding: 12px 0;
+}
+
+/* Input */
+
+.composer-wrap {
+    padding: 16px 22px 20px;
+    background: linear-gradient(to top, var(--bg) 75%, transparent);
+    flex-shrink: 0;
+}
+
+.composer-inner {
+    max-width: 790px;
+    margin: 0 auto;
+}
+
+.composer {
+    background: white;
+    border: 1px solid #dedff0;
+    border-radius: 17px;
+    display: flex;
+    align-items: flex-end;
+    padding: 10px;
+    gap: 10px;
+    box-shadow: 0 8px 30px #30285e0a;
+    transition: border-color 0.2s;
+}
+
+.composer:focus-within {
+    border-color: #a9a0ff;
+    box-shadow: 0 0 0 3px #6558e80d;
+}
+
+#prompt {
+    flex: 1;
+    min-width: 0;
+    max-height: 130px;
+    resize: none;
+    border: none;
+    outline: none;
+    padding: 10px 8px;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+    background: transparent;
+}
+
+#prompt::placeholder {
+    color: #a3a7b9;
+}
+
+.send {
+    width: 43px;
+    height: 43px;
+    flex-shrink: 0;
+    border: 0;
+    border-radius: 12px;
+    color: white;
+    background: var(--primary);
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.send:hover {
+    background: var(--primary-dark);
+}
+
+.send:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.disclaimer {
+    text-align: center;
+    color: #9a9eb0;
+    font-size: 10px;
+    margin-top: 12px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media (max-width: 760px) {
+    .sidebar {
+        display: none;
+    }
+
+    .topbar {
+        padding: 0 18px;
+        height: 68px;
+    }
+
+    .chat-area {
+        padding: 15px;
+    }
+
+    .welcome {
+        padding-top: 35px;
+    }
+
+    .suggestions {
+        grid-template-columns: 1fr;
+    }
+
+    .composer-wrap {
+        padding: 10px 12px 14px;
+    }
+
+    .bubble {
+        max-width: 90%;
+        font-size: 13px;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">✦</div>
+            <div>
+                <h2>Learnly AI</h2>
+                <p>Your personal AI teacher</p>
+            </div>
+        </div>
+
+        <button class="new-chat" id="newChat">＋ &nbsp; New conversation</button>
+
+        <p class="side-label">YOUR LEARNING SPACE</p>
+
+        <div class="feature active">
+            <span>✧</span> AI Tutor
+        </div>
+        <div class="feature">
+            <span>◈</span> Simple explanations
+        </div>
+        <div class="feature">
+            <span>⌘</span> Practice & examples
+        </div>
+
+        <div class="sidebar-bottom">
+            <div class="profile">
+                <div class="avatar">AI</div>
+                <div>
+                    <h4>Learning Assistant</h4>
+                    <p>Here to help you learn</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <div>
+                <h3>AI Teacher</h3>
+                <p>Ask anything. Learn at your own pace.</p>
+            </div>
+            <div class="status">
+                <span class="dot"></span> AI Tutor
+            </div>
+        </header>
+
+        <section class="chat-area" id="chatArea">
+            <div class="chat-content" id="chatContent">
+
+                <div class="welcome" id="welcome">
+                    <div class="welcome-icon">✦</div>
+                    <h1>What would you like<br>to <span>learn today?</span></h1>
+                    <p>Your personal AI teacher makes complex topics
+                    simple with clear explanations and easy examples.</p>
+                </div>
+
+                <div class="suggestions" id="suggestions">
+                    <button class="suggestion" data-prompt="Explain artificial intelligence in simple English with an example.">
+                        <span class="emoji">🧠</span>
+                        <strong>Understand AI</strong>
+                        <p>Learn artificial intelligence with simple examples.</p>
+                    </button>
+
+                    <button class="suggestion" data-prompt="Explain Python programming to a beginner with a simple example.">
+                        <span class="emoji">💻</span>
+                        <strong>Learn programming</strong>
+                        <p>Explore coding step by step.</p>
+                    </button>
+
+                    <button class="suggestion" data-prompt="Explain how the internet works in simple English.">
+                        <span class="emoji">🌐</span>
+                        <strong>Explore technology</strong>
+                        <p>Understand how everyday technology works.</p>
+                    </button>
+
+                    <button class="suggestion" data-prompt="Teach me a new interesting concept today with a practical example.">
+                        <span class="emoji">💡</span>
+                        <strong>Learn something new</strong>
+                        <p>Discover a useful concept today.</p>
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <footer class="composer-wrap">
+            <div class="composer-inner">
+                <form class="composer" id="chatForm">
+                    <textarea
+                        id="prompt"
+                        rows="1"
+                        placeholder="Ask your teacher anything..."
+                        aria-label="Your message"
+                    ></textarea>
+                    <button class="send" id="sendButton" type="submit" aria-label="Send message">↑</button>
+                </form>
+                <p class="disclaimer">AI can make mistakes. Keep learning and stay curious.</p>
+            </div>
+        </footer>
+    </main>
+
+</div>
+
+<script>
+const form = document.getElementById("chatForm");
+const promptInput = document.getElementById("prompt");
+const sendButton = document.getElementById("sendButton");
+const chatContent = document.getElementById("chatContent");
+const chatArea = document.getElementById("chatArea");
+const welcome = document.getElementById("welcome");
+const suggestions = document.getElementById("suggestions");
+
+let busy = false;
+
+function scrollToBottom() {
+    chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+function addMessage(role, text) {
+    const row = document.createElement("div");
+    row.className = "message " + role;
+
+    const avatar = document.createElement("div");
+    avatar.className = "message-avatar";
+    avatar.textContent = role === "user" ? "●" : "✦";
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+
+    // Use textContent to safely display text from the API.
+    bubble.textContent = text;
+
+    row.appendChild(avatar);
+    row.appendChild(bubble);
+    chatContent.appendChild(row);
+
+    scrollToBottom();
+    return bubble;
+}
+
+function setBusy(value) {
+    busy = value;
+    sendButton.disabled = value;
+    sendButton.textContent = value ? "…" : "↑";
+}
+
+async function sendMessage(message) {
+    message = message.trim();
+
+    if (!message || busy) return;
+
+    welcome.classList.add("hidden");
+    suggestions.classList.add("hidden");
+
+    addMessage("user", message);
+    promptInput.value = "";
+    promptInput.style.height = "auto";
+
+    const answerBubble = addMessage("assistant", "Thinking...");
+    setBusy(true);
+
+    try {
+        // Flask must provide this endpoint.
+        const response = await fetch("/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: message
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error("Server error: " + response.status);
+        }
+
+        const data = await response.json();
+
+        if (typeof data.reply !== "string") {
+            throw new Error("Unexpected response from the server.");
+        }
+
+        answerBubble.textContent = data.reply;
+
+    } catch (error) {
+        answerBubble.textContent =
+            "I couldn't connect to the AI teacher. Please check that Flask is running and the /chat endpoint is configured.";
+        console.error(error);
+    } finally {
+        setBusy(false);
+        promptInput.focus();
+        scrollToBottom();
+    }
+}
+
+form.addEventListener("submit", function(event) {
+    event.preventDefault();
+    sendMessage(promptInput.value);
+});
+
+promptInput.addEventListener("keydown", function(event) {
+    if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        form.requestSubmit();
+    }
+});
+
+promptInput.addEventListener("input", function() {
+    this.style.height = "auto";
+    this.style.height = Math.min(this.scrollHeight, 130) + "px";
+});
+
+document.querySelectorAll(".suggestion").forEach(function(button) {
+    button.addEventListener("click", function() {
+        sendMessage(this.dataset.prompt);
+    });
+});
+
+document.getElementById("newChat").addEventListener("click", function() {
+    if (busy) return;
+
+    // This resets the visible conversation only.
+    // It does not delete chat_history.json on the server.
+    chatContent.querySelectorAll(".message").forEach(function(message) {
+        message.remove();
+    });
+
+    welcome.classList.remove("hidden");
+    suggestions.classList.remove("hidden");
+    promptInput.value = "";
+    promptInput.focus();
+});
+</script>
+</body>
+</html>
